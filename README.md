@@ -26,6 +26,11 @@ you`ll need VORP-CORE. Vorp-Inventory and Vorp-API for the script to work proper
 # Framework
 Currently this script only works with VORP.
 
+# Support
+
+If you want to support me, you can do this here: <br>
+https://www.buymeacoffee.com/justSalkin
+
 # Changelog
 V 1.2.1  <br>
 - fix exchange NPC <br>
