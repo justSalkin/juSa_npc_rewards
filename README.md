@@ -11,7 +11,7 @@ You can create NPCs with one of the following functions:
 
 If you found a bug, if you have an idea for the <br>
 next version, or if you simply need some help,<br>
-pls let me know here on github.
+join: https://discord.gg/DUax6SsEt2
 
 ------------------<br>
 
@@ -32,6 +32,14 @@ If you want to support me, you can do this here: <br>
 https://www.buymeacoffee.com/justSalkin
 
 # Changelog
+
+V 1.3.0 <br>
+- fixed progressbar showing befor item amount is checked <br>
+- added webhooks for single npcs <br>
+- added progressbar for single npcs <br>
+- added option to choose between right or left notify <br>
+- added more infos showing when interact with an npc and option to say yes/no to a sell or exchange <br>
+
 V 1.2.1  <br>
 - fix exchange NPC <br>
 
