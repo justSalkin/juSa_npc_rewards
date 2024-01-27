@@ -14,7 +14,7 @@ Config.useRightNotify = false --if true use right notify, if false use notify on
 
 Config.NPCs = {
     --No Interaction
-    { npc_name = "Valentine Saloon", blip = 0, npcmodel = "U_F_M_TljBartender_01", coords = vector3(-313.25, 805.35, 117.98), heading = -80.23, radius = 0, type = "nointeraction"},
+    { npc_name = "Valentine Saloon", blip = 0, npcmodel = "U_F_M_TljBartender_01", coords = vector3(-313.25, 805.35, 117.98), heading = -80.23, radius = 0, type = "nointeraction", scenario = "WORLD_HUMAN_BARTENDER_CLEAN_GLASS", anim = { animDict = false, animName = "" }},
 
     { npc_name = "Give-NPC", -- NPC/blip name
     blip = 214435071, --set to 0 to not display a blip for this NPC
@@ -22,6 +22,8 @@ Config.NPCs = {
     coords = vector3(2710.51, -1385.59, 45.43), 
     heading = 189.77, 
     radius = 4.0, --interaction radius
+    scenario = false, -- set to false to use no scenario | find some here: https://github.com/femga/rdr3_discoveries/blob/master/animations/scenarios/scenario_types_with_conditional_anims.lua
+    anim = { animDict = false, animName = "" }, -- set to false to not use animations | find more here: https://raw.githubusercontent.com/femga/rdr3_discoveries/master/animations/ingameanims/ingameanims_list.luas
     taskbar = 3000, --duration of the interaction
     usewebhook = true, --set true, if you want to get discord notification when interact with npc
     type = "give", -- see NPC Settings for more informations
@@ -34,7 +36,9 @@ Config.NPCs = {
     npcmodel = "CS_MP_TRAVELLINGSALESWOMAN", 
     coords = vector3(2681.41, -1399.55, 45.38), 
     heading = -108.46, 
-    radius = 4.0, 
+    radius = 4.0,
+    scenario = "WORLD_HUMAN_WRITE_NOTEBOOK",
+    anim = { animDict = false, animName = "" }, 
     taskbar = 6000,
     usewebhook = true,
     type = "sell",
@@ -47,7 +51,9 @@ Config.NPCs = {
     npcmodel = "CS_MP_TRAVELLINGSALESWOMAN", 
     coords = vector3(2698.74, -1407.68, 45.65), 
     heading = -108.46, 
-    radius = 4.0, 
+    radius = 4.0,
+    scenario = false,
+    anim = { animDict = false, animName = "" }, 
     taskbar = 3000,
     usewebhook = true,
     type = "exchange", 
