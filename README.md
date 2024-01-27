@@ -1,4 +1,4 @@
-# juSa_npc_rewards (v.1.3.0)
+# juSa_npc_rewards (v.1.4.0)
 A script that allows you to create NPCs and assign various functions to them. <br>
 You can create NPCs with one of the following functions:
 
@@ -32,6 +32,9 @@ If you want to support me, you can do this here: <br>
 https://www.buymeacoffee.com/justSalkin
 
 # Changelog
+
+V 1.4.0 <br>
+- added animations and scenarios
 
 V 1.3.0 <br>
 - fixed progressbar showing befor item amount is checked <br>
