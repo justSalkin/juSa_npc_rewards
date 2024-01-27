@@ -33,11 +33,20 @@ function StartNPCs() --start function after user selected the character
         Wait(1000)
         FreezeEntityPosition(npc, true) -- NPC can't escape
         SetBlockingOfNonTemporaryEvents(npc, true) -- NPC can't be scared
-        --create blip
-        if v.blip ~= 0 then
+        if v.blip ~= 0 then --create blip
             local blip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, x, y, z)
             SetBlipSprite(blip, v.blip, true)
             Citizen.InvokeNative(0x9CB1A1623062F402, blip, v.npc_name)
+        end
+        if v.scenario then --load scenario in loop
+            TaskStartScenarioInPlace(npc, GetHashKey(v.scenario), 0, true, false, false, false)
+        end
+        if v.anim.animDict and v.anim.animName then --loads animation looped
+            RequestAnimDict(v.anim.animDict)
+            while not HasAnimDictLoaded(v.anim.animDict) do --get animation
+                Citizen.Wait(100)
+            end
+            TaskPlayAnim(npc, v.anim.animDict, v.anim.animName, 1.0, -1.0, -1, 1, 0, true, 0, false, 0, false)
         end
     end
 end
