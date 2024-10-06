@@ -33,7 +33,7 @@ https://www.buymeacoffee.com/justSalkin
 
 # Changelog
 
-V 1.4.0 <br>
+V 1.5 <br>
 - new Debug Feature <br>
 - give-weapons for "give" and "exchange" NPCs <br>
 - reworked Discord webhook (should now work without problems) <br>
