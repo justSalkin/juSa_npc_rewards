@@ -1,4 +1,4 @@
-# juSa_npc_rewards (v.1.4.0)
+# juSa_npc_rewards (v.1.5.0)
 A script that allows you to create NPCs and assign various functions to them. <br>
 You can create NPCs with one of the following functions:
 
@@ -32,6 +32,16 @@ If you want to support me, you can do this here: <br>
 https://www.buymeacoffee.com/justSalkin
 
 # Changelog
+
+V 1.4.0 <br>
+- new Debug Feature <br>
+- give-weapons for "give" and "exchange" NPCs <br>
+- reworked Discord webhook (should now work without problems) <br>
+- cooldowns, in general or for each NPC individually <br>
+-  job and -grade dependency <br>
+- talking-time (fixes the bug that players are in talk-mode indefinitely) <br>
+- internal structural changes, smoother processes, better presentation of information ingame and in Discord <br>
+
 
 V 1.4.0 <br>
 - added animations and scenarios
