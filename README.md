@@ -1,4 +1,4 @@
-# juSa_npc_rewards (v.1.5.0)
+# juSa_npc_rewards (v.1.5.1)
 A script that allows you to create NPCs and assign various functions to them. <br>
 You can create NPCs with one of the following functions:
 
