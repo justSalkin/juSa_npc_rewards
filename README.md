@@ -33,6 +33,9 @@ https://www.buymeacoffee.com/justSalkin
 
 # Changelog
 
+V 1.5.1 <br>
+Fixed a bug where the exchange NPC always expected at least one item to give and one to take.
+
 V 1.5 <br>
 - new Debug Feature <br>
 - give-weapons for "give" and "exchange" NPCs <br>
