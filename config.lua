@@ -106,6 +106,8 @@ Config.Language = {
     title_payed = "You payed: ",
     lowgrade = "Your job grade is too low.",
     wrongjob = "You don't have the right job for this.",
+    noitemneeded = "no item   ",
+    noitemrec = "no item   ",
     --discord
     discord_title_give = "NPC GIVE",
     discord_title_sell = "NPC SELL",
