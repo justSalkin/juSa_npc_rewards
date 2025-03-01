@@ -151,11 +151,13 @@ AddEventHandler("juSa_npc_rewards:infoexchange", function(giveitem, takeitem, gi
     local _source = source
     local Character = VORPcore.getUser(_source).getUsedCharacter
     local checked = true
-    for i,v in ipairs(takeitem) do -- check for enough items
-        count = VORPInv.getItemCount(_source, v.item)
-        if count < v.amount then
-            checked = false
-            TriggerClientEvent("vorp:TipRight", _source, Config.Language.notenougitems, 3000)
+    if takeitem and #takeitem > 0 then
+        for i,v in ipairs(takeitem) do -- check for enough items
+            count = VORPInv.getItemCount(_source, v.item)
+            if count < v.amount then
+                checked = false
+                TriggerClientEvent("vorp:TipRight", _source, Config.Language.notenougitems, 3000)
+            end
         end
     end
     if checked == true then
@@ -171,9 +173,11 @@ AddEventHandler("juSa_npc_rewards:exchange", function(giveitem, takeitem, givewe
     local lastname = Character.lastname
     local rewardText = ""
     -- order for webhook first give
-    for k,v in pairs(giveitem) do
-        VORPInv.addItem(_source, v.item, v.amount)
-        rewardText = rewardText .. v.amount .. "x " .. v.label .. ", "
+    if giveitem and #giveitem > 0 then
+        for k,v in pairs(giveitem) do
+            VORPInv.addItem(_source, v.item, v.amount)
+            rewardText = rewardText .. v.amount .. "x " .. v.label .. ", "
+        end
     end
     if not giveweapon == nil then
         for k,v in ipairs(giveweapon) do
@@ -199,33 +203,47 @@ AddEventHandler("juSa_npc_rewards:exchange", function(giveitem, takeitem, givewe
     rewardText = rewardText .. givemoney .. " $ "
     rewardText = rewardText .. Config.Language.webhook_for
     -- then take items -> rewardText
-    for k,v in pairs(takeitem) do
-        VORPInv.subItem(_source, v.item, v.amount)
-        rewardText = rewardText .. v.amount .. "x " .. v.label .. ", "
+    if takeitem and #takeitem > 0 then
+        for k,v in pairs(takeitem) do
+            VORPInv.subItem(_source, v.item, v.amount)
+            rewardText = rewardText .. v.amount .. "x " .. v.label .. ", "
+        end
     end
     Character.removeCurrency(0, takemoney)
     rewardText = rewardText .. takemoney .. " $ "
     if Config.useRightNotify then --notify
-        for k,v in ipairs(giveitem) do
-            VORPcore.NotifyRightTip(_source, Config.Language.got..v.amount.."x "..v.label,4000)
+        if giveitem and #giveitem > 0 then
+            for k,v in ipairs(giveitem) do
+                VORPcore.NotifyRightTip(_source, Config.Language.got..v.amount.."x "..v.label,4000)
+            end
         end
-        for k,v in ipairs(takeitem) do
-            VORPcore.NotifyRightTip(_source, Config.Language.exchanged..v.amount.."x "..v.label,4000)
+        if takeitem and #takeitem > 0 then
+            for k,v in ipairs(takeitem) do
+                VORPcore.NotifyRightTip(_source, Config.Language.exchanged..v.amount.."x "..v.label,4000)
+            end
         end
-        for k,v in ipairs(giveweapon) do
-            VORPcore.NotifyRightTip(_source, Config.Language.got.."1x "..v.label,4000)
+        if giveweapon and #giveweapon > 0 then
+            for k,v in ipairs(giveweapon) do
+                VORPcore.NotifyRightTip(_source, Config.Language.got.."1x "..v.label,4000)
+            end
         end
         VORPcore.NotifyRightTip(_source, Config.Language.got..givemoney.." $",4000)
         VORPcore.NotifyRightTip(_source, Config.Language.payed..takemoney.." $",4000)
     else
-        for k,v in ipairs(giveitem) do
-            VORPcore.NotifyLeft(_source, Config.Language.title_got, v.amount .. "x " .. v.label, "BLIPS", "blip_chest", 4000, "COLOR_GREEN")
+        if giveitem and #giveitem > 0 then
+            for k,v in ipairs(giveitem) do
+                VORPcore.NotifyLeft(_source, Config.Language.title_got, v.amount .. "x " .. v.label, "BLIPS", "blip_chest", 4000, "COLOR_GREEN")
+            end
         end
-        for k,v in ipairs(takeitem) do
-            VORPcore.NotifyLeft(_source, Config.Language.title_exchanged, v.amount .. "x " .. v.label, "BLIPS", "blip_chest", 4000, "COLOR_RED")
+        if takeitem and #takeitem > 0 then
+            for k,v in ipairs(takeitem) do
+                VORPcore.NotifyLeft(_source, Config.Language.title_exchanged, v.amount .. "x " .. v.label, "BLIPS", "blip_chest", 4000, "COLOR_RED")
+            end
         end
-        for k,v in ipairs(giveweapon) do
-            VORPcore.NotifyLeft(_source, Config.Language.title_got, "1x " .. v.label, "BLIPS", "blip_weapon", 4000, "COLOR_GREEN")
+        if giveweapon and #giveweapon > 0 then
+            for k,v in ipairs(giveweapon) do
+                VORPcore.NotifyLeft(_source, Config.Language.title_got, "1x " .. v.label, "BLIPS", "blip_weapon", 4000, "COLOR_GREEN")
+            end
         end
         VORPcore.NotifyLeft(_source, Config.Language.title_got, givemoney .. " $","BLIPS", "blip_cash_bag", 4000, "COLOR_GREEN")
         VORPcore.NotifyLeft(_source, Config.Language.title_payed, takemoney .. " $","BLIPS", "blip_cash_bag", 4000, "COLOR_RED")

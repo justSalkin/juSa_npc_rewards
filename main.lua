@@ -203,13 +203,21 @@ Citizen.CreateThread(function()
                 elseif v.type == "exchange" then
                     sleep = false
                     local takeItemInfo = ""
-                    for _, item in ipairs(v.takeitem) do
-                        takeItemInfo = takeItemInfo .. tostring(item.amount) .. "x " .. item.label .. ", "
+                    if v.takeitem and #v.takeitem > 0 then
+                        for _, item in ipairs(v.takeitem) do
+                            takeItemInfo = takeItemInfo .. tostring(item.amount) .. "x " .. item.label .. ", "
+                        end
+                    else
+                        takeItemInfo = Config.Language.noitemneeded
                     end
                     takeItemInfo = string.sub(takeItemInfo, 1, -3)  -- remove the trailing comma and space
                     local giveItemInfo = ""
-                    for _, item in ipairs(v.giveitem) do
-                        giveItemInfo = giveItemInfo .. tostring(item.amount) .. "x " .. item.label .. ", "
+                    if v.giveitem and #v.giveitem > 0 then
+                        for _, item in ipairs(v.giveitem) do
+                            giveItemInfo = giveItemInfo .. tostring(item.amount) .. "x " .. item.label .. ", " 
+                        end 
+                    else
+                        giveItemInfo = Config.Language.noitemrec
                     end
                     if not v.giveweapon == nil then  -- check if giveweapon has items
                         for _, weapon in ipairs(v.giveweapon) do
