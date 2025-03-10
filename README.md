@@ -1,10 +1,11 @@
-# juSa_npc_rewards (v.1.5.1)
+# juSa_npc_rewards (v.1.6)
 A script that allows you to create NPCs and assign various functions to them. <br>
 You can create NPCs with one of the following functions:
 
-"give" = NPC gives player items <br>
+"give" = NPC gives player items / weapons / money <br>
 "sell" = NPC takes items and pays amount of $ back <br>
-"exchange" = NPC takes item or money and gives money or another item back <br>
+"sell_weapon" = NPC takes weapon and pays amount of $ back and/or gives you items in return <br>
+"exchange" = NPC takes items/money and gives items/weapons/money in return <br>
 "nointeraction" = just an NPC, you can't interact with them <br>
 
 ------------------<br>
@@ -20,7 +21,10 @@ join: https://discord.gg/DUax6SsEt2
 3) Start server
 
 # Requirements
-you`ll need VORP-CORE. Vorp-Inventory and Vorp-API for the script to work properly
+- vorp_core
+- vorp_inventory
+- vorp_api
+- vorp_menu
 
 
 # Framework
@@ -32,6 +36,11 @@ If you want to support me, you can do this here: <br>
 https://www.buymeacoffee.com/justSalkin
 
 # Changelog
+
+V 1.6 <br>
+- NPC type “sell_weapon” added <br>
+- added menu calls (you now need prep_menu) <br>
+- reworked old calls, replaced by StateBags <br>
 
 V 1.5.1 <br>
 Fixed a bug where the exchange NPC always expected at least one item to give and one to take.
