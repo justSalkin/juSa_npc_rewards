@@ -1,27 +1,29 @@
 Config = {}
 
-Config.Debug = true --enables input commands and some consol-prints | for details check out github or discord
+Config.Debug = true --enables input commands and some consol-prints | for details check out git or discord
 
-Config.DiscordWebhook = "" --put your webhook here
+Config.DiscordWebhook = ""
 Config.DiscordBotName = "juSa NPC Rewards"
 Config.DiscordAvatar = "https://i.postimg.cc/TYm9DdHT/jusa-scripts.png"
 
 Config.useRightNotify = false --if true use right notify, if false use notify on the left
-
 Config.generalCooldown = false --turn on/off cooldown for every NPC | after one interaction with any NPC the player gets new cooldown for EVERY NPC
 Config.Cooldown = 0 --in sec
+
 Config.talkingTime = 7 --sec how long you can interact with one NPC until he is not longer responding to you and you have to "talk" to the NPC again
 ----------------------------- NPC Settings -------------------------------------
---NPC Types:    "give" = NPC gives player items
+
+--NPC Types:    "give" = NPC gives player items / weapons / money
 --              "sell" = NPC takes items and pays amount of $ back
---              "exchange" = NPC takes item or money and gives money or another item back
+--              "sell_weapon" = NPC takes weapon and pays amount of $ back and/or gives you items in return
+--              "exchange" = NPC takes items/money and gives items/weapons/money in return
 --              "nointeraction" = just an NPC, you can't interact with them
 --------------------------------------------------------------------------------
 
 Config.NPCs = {
-    --No Interaction
+    --No Interaction | Valentine
     { npc_name = "Valentine Saloon", blip = 0, npcmodel = "U_F_M_TljBartender_01", coords = vector3(-313.25, 805.35, 117.98), heading = -80.23, radius = 0, type = "nointeraction", scenario = "WORLD_HUMAN_BARTENDER_CLEAN_GLASS", anim = { animDict = false, animName = "" }},
-
+    --Interactiv
     { npc_name = "Give-NPC", -- NPC/blip name
     blip = 214435071, --set to 0 to not display a blip for this NPC
     npcmodel = "CS_CABARETMC", --npc skin, randomoutfit = true
@@ -76,6 +78,25 @@ Config.NPCs = {
     givemoney = 0, 
     takemoney = 5,
     },
+
+    { npc_name = "Sell_weapon-NPC",
+    blip = 214435071,
+    npcmodel = "mp_u_m_m_lbt_hostagemarshal_01", 
+    coords = vector3(2695.74, -1403.68, 45.65), 
+    heading = -61.44, 
+    radius = 2.5,
+    scenario = false,
+    anim = { animDict = false, animName = '' }, 
+    cooldown = 30,
+    joblocked = {{name = "gunsmith", grade = 3},},
+    taskbar = 3000,
+    usewebhook = true,
+    type = "sell_weapon",
+    takeweapon = {  {weaponname = "WEAPON_REPEATER_HENRY", label = "Henry Repeater", givemoney = 100, giveitems = {{name = "apple", label = "apple", amount = 1}}}, 
+                    {weaponname = "WEAPON_REVOLVER_NAVY", label = "Navy Revolver", givemoney = 280, giveitems = {}},
+                    {weaponname = "WEAPON_SNIPERRIFLE_ROLLINGBLOCK", label = "Rolling-Block Sniper", givemoney = 450, giveitems = {{name = "stone", label = "stone", amount = 3}, {name = "apple", label = "apple", amount = 1}}}
+                }
+    },
 }
 
 ----------------------------- TRANSLATE HERE -------------------------------------
@@ -88,12 +109,16 @@ Config.Language = {
     onCooldown = "I'm busy. Come back later ...",
     wrongJob = "I think you've come to the wrong place ...",
     sellinfo = "Do you want to sell %s for %d$ ?",
-    seeUlater = "Ok, see you later then.",
+    sellWeaponInfo = "Do you want to sell %s for %s and %d $?",
     exchangeinfo = "Do you want to exchange %s and %d$ against %s and %d$ ?",
+    seeUlater = "Ok, see you later then.",
+    notBuyingWeapon = "I don't buy that kind of gun. I'm sorry.",
+    invToFull = "I don't think you have enough space in your bag.",
     --progressbar
     getting_item = "you'r getting items ... ",
     selling_item = "about to sell something ... ",
     exchanging_item = "exchanging ...",
+    selling_weapon = "You deal with the weapon ...",
     --notify
     notenougitems = "You do not have enough items!",
     got = "You got: ",
@@ -108,17 +133,20 @@ Config.Language = {
     wrongjob = "You don't have the right job for this.",
     noitemneeded = "no item   ",
     noitemrec = "no item   ",
+    noweapons = "Looks like you have no weapons to trade with.",
     --discord
-    discord_title_give = "NPC GIVE",
-    discord_title_sell = "NPC SELL",
-    discord_title_exchange = "NPC EXCHANGE",
     webhook_got = "Got ",
     webhook_from = " from ",
     webhook_sold = "Sold ",
     webhook_to = " to ",
     webhook_for = " for ",
     webhook_exchanged = "Exchanged: ",
-    webhook_with = " with "
+    webhook_soldweapon = "Sold a ",
+    webhook_at = " an ",
+    webhook_with = " with ",
+    --menu
+    title = "Weapons menu",
+    SN = "Serial number: "
 }
 ------------------- PROMPT -----------------
 Config.keys = {

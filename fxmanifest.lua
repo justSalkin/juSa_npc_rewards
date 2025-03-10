@@ -4,7 +4,7 @@ rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aw
 
 author 'justSalkin'
 description 'Script for rewards from NPCs'
-version '1.5.1'
+version '1.6'
 
 client_script {
     'main.lua', 
@@ -22,7 +22,8 @@ dependency 'vorp_core'
 dependencies {
     'vorp_core',
     'vorp_inventory',
-    'vorp_progressbar'
+    'vorp_progressbar',
+    'vorp_menu'
 }
 
 -- for more infos or if you found a bug join the juSa script discord: https://discord.com/invite/bxJ3d2j4dH

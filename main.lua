@@ -1,23 +1,20 @@
-local VORPcore = exports.vorp_core:GetCore()
+local Core = exports.vorp_core:GetCore()
 local talktoprompt = GetRandomIntInRange(0, 0xffffff)
 local decision = GetRandomIntInRange(0, 0xffffff)
 local progressbar = exports.vorp_progressbar:initiate()
+local Menu = exports.vorp_menu:GetMenuData()
 
+local StartNPCsOnce = false
 local generalCooldown = Config.Cooldown
 local npcCooldowns = {} --table for every NPC if generalCooldown = false
 local jobs = {}
 local hasjob = false
 local talking = false
 local talkingTime = Config.talkingTime --sec how long you are "talkin"
-
-TriggerEvent("getCore",function(core)
-    VORPcore = core
-end)
-
-RegisterNetEvent("vorp:SelectedCharacter") -- NPC loads after selecting character
-AddEventHandler("vorp:SelectedCharacter", function(charid)
-StartNPCs()
-end)
+local MenuTriggered = false
+local WeaponChoosed = false
+local selectedWeapon = nil
+local WeaponID = nil
 
 function StartNPCs() --start function after user selected the character
     Citizen.Wait(1000)
@@ -111,6 +108,15 @@ end)
 
 Citizen.CreateThread(function()
     while true do
+        if LocalPlayer.state.IsInSession then
+            if not StartNPCsOnce then --loading NPCs once if player choosed a char and joins game-session
+                if Config.Debug then
+                    print("Player joind game-session. Starting NPCs ...")
+                end
+                StartNPCs()
+                StartNPCsOnce = true
+            end
+        end
         local sleep = true
         local _source = source
         for i, v in ipairs(Config.NPCs) do --check every NPC
@@ -123,7 +129,7 @@ Citizen.CreateThread(function()
                     if Citizen.InvokeNative(0xC92AC953F0A982AE, talktonpc) then --when button is pressed
                         if (generalCooldown > 0 and Config.generalCooldown) or (npcCooldowns[i] > 0 and v.cooldown ~= nil) then
                             PromptRemoveGroup(talktoprompt)
-                            VORPcore.NotifyBottomRight(Config.Language.onCooldown, 4000)
+                            Core.NotifyBottomRight(Config.Language.onCooldown, 4000)
                             Wait(4000)
                         else
                             talking = true
@@ -149,7 +155,7 @@ Citizen.CreateThread(function()
                             if not hasjob then --wait for results and if player has not correct job he can not talk to NPC
                                 talking = false
                                 PromptRemoveGroup(talktoprompt)
-                                VORPcore.NotifyBottomRight(Config.Language.wrongJob, 4000)
+                                Core.NotifyBottomRight(Config.Language.wrongJob, 4000)
                                 Wait(4000)
                             end
                         elseif v.joblocked == nil then --if no job required
@@ -196,7 +202,7 @@ Citizen.CreateThread(function()
                         end
                     elseif Citizen.InvokeNative(0xC92AC953F0A982AE, noPrompt) then
                         PromptRemoveGroup(decision)
-                        VORPcore.NotifyBottomRight(Config.Language.seeUlater,4000)
+                        Core.NotifyBottomRight(Config.Language.seeUlater,4000)
                         Wait(4000)
                         Reset()
                     end
@@ -240,10 +246,71 @@ Citizen.CreateThread(function()
                         end
                     elseif Citizen.InvokeNative(0xC92AC953F0A982AE, noPrompt) then
                         PromptRemoveGroup(decision)
-                        VORPcore.NotifyBottomRight(Config.Language.seeUlater, 4000)
+                        Core.NotifyBottomRight(Config.Language.seeUlater, 4000)
                         Wait(4000)
                         Reset()
-                    end                
+                    end   
+                elseif v.type == "sell_weapon" then
+                    sleep = false
+                    if not MenuTriggered then
+                        TriggerServerEvent("juSa_npc_rewards:getAllWeaponsForMenu") --get all weapons in players inv
+                        Wait(100)
+                    elseif MenuTriggered and not WeaponChoosed then
+                        if Config.Debug then
+                            print("Waiting for the player to select a weapon from the menu ...")
+                        end
+                        Wait(100) --wait until menu gets triggered and player choosed a weapon 
+                    elseif MenuTriggered and WeaponChoosed then --when player choosed a weapon in menu to sell
+                        local canSell = false
+                        local weaponlabel = ""
+                        local weaponreward = nil
+                        local weapon
+                        for i, w in ipairs(v.takeweapon) do --check if NPC buys that weapon
+                            if w.weaponname == selectedWeapon then
+                                weapon = w
+                                weaponlabel = w.label
+                                weaponreward = w.givemoney
+                                canSell = true
+                                break
+                            end
+                        end
+                        if not canSell then --feedback NPC does not buy that kind of weapon
+                            Core.NotifyBottomRight(Config.Language.notBuyingWeapon,4000)
+                            Wait(4000)
+                            Reset()
+                        else            
+                            local itemInfo = ""
+                            if weapon.giveitems then
+                                for _, item in ipairs(weapon.giveitems) do
+                                    itemInfo = itemInfo .. tostring(item.amount) .. "x " .. item.label .. ", "
+                                end
+                            else
+                                if Config.Debug then
+                                    print("No items available for this weapon in the config.")
+                                end
+                            end
+                            itemInfo = string.sub(itemInfo, 1, -3)  -- removes trailing comma and space
+                            local info = string.format(Config.Language.sellWeaponInfo, weapon.label, itemInfo, weapon.givemoney)
+                            local label = CreateVarString(10, 'LITERAL_STRING', info)
+                            PromptRemoveGroup(talktoprompt) --unload talktonpc prompt
+                            PromptSetActiveGroupThisFrame(decision, label) --loads decision prompt
+                            if Citizen.InvokeNative(0xC92AC953F0A982AE, yesPrompt) then
+                                TriggerServerEvent("juSa_npc_rewards:infosell_weapon", v.taskbar, v.usewebhook, v.npc_name, weapon, WeaponID)
+                                Wait(v.taskbar)
+                                Reset()
+                                if Config.generalCooldown then
+                                    NewCooldowns()
+                                else
+                                    npcCooldowns[i] = v.cooldown or 0
+                                end
+                            elseif Citizen.InvokeNative(0xC92AC953F0A982AE, noPrompt) then
+                                PromptRemoveGroup(decision)
+                                Core.NotifyBottomRight(Config.Language.seeUlater,4000)
+                                Wait(4000)
+                                Reset()
+                            end    
+                        end
+                    end        
                 end
                 PromptRemoveGroup(talktoprompt)
                 PromptRemoveGroup(decision)
@@ -254,6 +321,38 @@ Citizen.CreateThread(function()
         end
         Citizen.Wait(1)
     end
+end)
+
+RegisterNetEvent("juSa_npc_rewards:openWeaponMenu")
+AddEventHandler("juSa_npc_rewards:openWeaponMenu", function(weapons) --opens menu with 1 entry for every weapon in players inv
+    local elements = {}
+    Menu.CloseAll()
+    MenuTriggered = true
+    print(MenuTriggered)
+
+    for i, weapon in ipairs(weapons) do -- load weapons and names
+        table.insert(elements, {
+            label = weapon.label, 
+            value = weapon.id,
+            model = weapon.name,
+            desc = Config.Language.SN..weapon.serial_number.." \n"--..weapon.desc
+        })
+    end
+
+    Menu.Open("default", GetCurrentResourceName(), "weapon_menu", {
+        title = Config.Language.title,
+        align = "top-left",
+        elements = elements
+    }, function(data, menu)
+        WeaponChoosed = true
+        selectedWeapon = data.current.model
+        WeaponID = data.current.value
+        print(WeaponID)
+        menu.close() 
+    end, function(data, menu) --if menu gets closed without choosing a weapon, everything gets a reset
+        Reset()
+        menu.close()
+    end)
 end)
 
 RegisterNetEvent("juSa_npc_rewards:infosellsend")
@@ -280,6 +379,23 @@ AddEventHandler("juSa_npc_rewards:infoexchangesend", function(takeitem, giveitem
     FreezeEntityPosition(playerPed,false)
 end)
 
+RegisterNetEvent("juSa_npc_rewards:info_sell_weapon_send")
+AddEventHandler("juSa_npc_rewards:info_sell_weapon_send", function(taskbar, usewebhook, npc_name, weapon, WeaponID, hasSpace)
+    if hasSpace then --if player has inv space
+        local playerPed = PlayerPedId()
+        FreezeEntityPosition(playerPed,true)
+        TaskStartScenarioInPlace(playerPed, GetHashKey("WORLD_HUMAN_BADASS"), taskbar, true, false, false, false)
+        progressbar.start(Config.Language.selling_weapon, taskbar, nil, linear)
+        Citizen.Wait(taskbar)
+        TriggerServerEvent("juSa_npc_rewards:sell_weapon", usewebhook, npc_name, weapon, WeaponID)
+        ClearPedTasks(playerPed)
+        FreezeEntityPosition(playerPed,false)
+    else
+        Core.NotifyBottomRight(Config.Language.invToFull,4000) --if inv to full
+        Reset()
+    end
+end)
+
 RegisterNetEvent("juSa_npc_rewards:jobchecked")
 AddEventHandler("juSa_npc_rewards:jobchecked", function(result)
     hasjob = result
@@ -301,6 +417,10 @@ end
 function Reset() --resets vars
     hasjob = false
     talking = false
+    MenuTriggered = false
+    WeaponChoosed = false
+    selectedWeapon = nil
+    WeaponID = nil
 end
 
 Citizen.CreateThread(function() --handeling cooldown counting
@@ -323,7 +443,6 @@ Citizen.CreateThread(function() --handeling cooldown counting
 end)
 
 ---- Debug commands ----
-
 RegisterCommand("printCd", function()
     if Config.Debug then --command if debug = true to print every cooldown
         PrintCooldowns()
