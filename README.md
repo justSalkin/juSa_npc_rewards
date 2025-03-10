@@ -39,7 +39,7 @@ https://www.buymeacoffee.com/justSalkin
 
 V 1.6 <br>
 - NPC type “sell_weapon” added <br>
-- added menu calls (you now need prep_menu) <br>
+- added menu calls (you now need vorp_menu) <br>
 - reworked old calls, replaced by StateBags <br>
 
 V 1.5.1 <br>
