@@ -43,7 +43,7 @@ V 1.6 <br>
 - reworked old calls, replaced by StateBags <br>
 
 V 1.5.1 <br>
-Fixed a bug where the exchange NPC always expected at least one item to give and one to take.
+- Fixed a bug where the exchange NPC always expected at least one item to give and one to take.
 
 V 1.5 <br>
 - new Debug Feature <br>
